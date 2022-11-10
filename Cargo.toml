@@ -3,6 +3,9 @@ name = "hikweb-rs"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+name = "hikweb_rs_lib"
+path = "src/lib.rs"
 
 [dependencies]
 quick-xml = "0.26.0"
@@ -13,3 +16,6 @@ futures = "0.3.25"
 thiserror = "*"
 chrono = { version = "0.4.22", features=["serde"] }
 tokio = { version = "1.21.2", features = ["full"] }
+digest = { git = "https://github.com/rojer-98/digest.git" }
+log = "0.4.17" 
+anyhow = "1.0.53"
