@@ -20,3 +20,4 @@ digest = { git = "https://github.com/rojer-98/digest.git" }
 log = "0.4.17" 
 anyhow = "1.0.53"
 url = "2.3.1"   
+convert_case = "0.6.0"  

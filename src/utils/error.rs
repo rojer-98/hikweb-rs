@@ -26,6 +26,11 @@ pub enum HikvisionError {
         #[from]
         source: url::ParseError,
     },
+    #[error(transparent)]
+    Response {
+        #[from]
+        source: crate::isapi::ErrorCode,
+    },
 }
 
 impl From<std::io::ErrorKind> for HikvisionError {

@@ -3,7 +3,8 @@ use thiserror::Error;
 
 use std::fmt::Display;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone, Copy, PartialEq)]
+#[serde(rename_all = "camelCase")]
 pub enum StatusCode {
     OK,
     DeviceBusy,
@@ -136,9 +137,6 @@ pub enum ErrorCode {
     LowScore,
 
     //StatusCode = 4
-
-
-
     #[error("Unknown error")]
     Unknown,
 }
