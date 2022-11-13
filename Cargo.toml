@@ -8,7 +8,7 @@ name = "hikweb_rs_lib"
 path = "src/lib.rs"
 
 [dependencies]
-quick-xml = "0.26.0"
+serde-xml-rs = { git = "https://github.com/rojer-98/serde-xml-rs.git" }  
 reqwest = { version = "0.11", features = ["json", "blocking"] }
 async-trait = "0.1.58"
 serde = { version = "1.0.147", features = ["derive"] }
@@ -19,3 +19,4 @@ tokio = { version = "1.21.2", features = ["full"] }
 digest = { git = "https://github.com/rojer-98/digest.git" }
 log = "0.4.17" 
 anyhow = "1.0.53"
+url = "2.3.1"   

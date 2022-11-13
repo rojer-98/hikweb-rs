@@ -21,8 +21,11 @@ pub enum HikvisionError {
     NotSet,
     #[error("api is not supported")]
     NotAvialiableApi,
-    #[error("error with setting|getting spotlight to camera")]
-    Spotlight,
+    #[error(transparent)]
+    Url {
+        #[from]
+        source: url::ParseError,
+    },
 }
 
 impl From<std::io::ErrorKind> for HikvisionError {

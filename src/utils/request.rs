@@ -1,5 +1,10 @@
 use digest::DigestAuth;
 use reqwest::Client;
+use serde::{de::DeserializeOwned, Serialize};
+use serde_xml_rs::{from_str, to_string};
+use url::Url;
+
+use std::io::ErrorKind;
 
 use crate::utils::{
     common_types::{AuthType, RequestType},
@@ -7,18 +12,64 @@ use crate::utils::{
 };
 
 #[derive(Default, Debug)]
-pub struct Handler {
+pub struct RequestHandler {
     user: Option<String>,
     pass: Option<String>,
 }
 
-impl Handler {
-    pub async fn send(&self, url: &str, data: Option<String>) -> Result<String, HikvisionError> {
-        request(url, (self.user.clone(), self.pass.clone()), AuthType::Digest, RequestType::Send, data).await
+impl RequestHandler {
+    pub async fn send<S>(&self, url: &str, params: S) -> Result<(), HikvisionError>
+    where
+        S: Serialize + Send + 'static + std::fmt::Debug,
+    {
+        if self.user.is_none() || self.pass.is_none() {
+            return Err(HikvisionError::NotSet);
+        }
+
+        let _ = Url::parse(&url.to_string())?;
+        let params = format!(
+            r#"{}"#,
+            to_string(&params).map_err(|_| ErrorKind::InvalidInput)?
+        );
+
+        let _ = self._send(url, Some(params)).await?;
+        Ok(())
     }
 
-    pub async fn retrieve(&self, url: &str) -> Result<String, HikvisionError> {
-        request(url, (self.user.clone(), self.pass.clone()), AuthType::Digest, RequestType::Send, None).await
+    pub async fn recieve<D>(&self, url: &str) -> Result<D, HikvisionError>
+    where
+        D: DeserializeOwned,
+    {
+        if self.user.is_none() || self.pass.is_none() {
+            return Err(HikvisionError::NotSet);
+        }
+
+        let _ = Url::parse(&url.to_string())?;
+        let response = self._retrieve(url).await?;
+
+        Ok(from_str(&response).map_err(|_| HikvisionError::NotAvialiableApi)?)
+    }
+
+    async fn _send(&self, url: &str, data: Option<String>) -> Result<String, HikvisionError> {
+        request(
+            url,
+            (self.user.clone(), self.pass.clone()),
+            AuthType::Digest,
+            RequestType::Send,
+            data,
+        )
+        .await
+    }
+
+    async fn _retrieve(&self, url: &str) -> Result<String, HikvisionError> {
+        request(
+            url,
+            (self.user.clone(), self.pass.clone()),
+            AuthType::Digest,
+            RequestType::Send,
+            None,
+        )
+        .await
     }
 }
 
