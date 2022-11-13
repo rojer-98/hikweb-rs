@@ -11,4 +11,7 @@ pub mod system;
 pub mod thermal;
 
 pub mod response;
+pub mod status;
+
 pub use response::*;
+pub use status::*;
