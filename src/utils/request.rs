@@ -45,7 +45,7 @@ impl RequestHandler {
         }
 
         let _ = Url::parse(&url.to_string())?;
-        let response = self._retrieve(url).await?;
+        let response = self._recieve(url).await?;
 
         Ok(from_str(&response).map_err(|_| HikvisionError::NotAvialiableApi)?)
     }
@@ -61,7 +61,7 @@ impl RequestHandler {
         .await
     }
 
-    async fn _retrieve(&self, url: &str) -> Result<String, HikvisionError> {
+    async fn _recieve(&self, url: &str) -> Result<String, HikvisionError> {
         request(
             url,
             (self.user.clone(), self.pass.clone()),
