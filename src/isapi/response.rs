@@ -1,10 +1,10 @@
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 use std::fmt::Display;
 
-use crate::isapi::{ErrorCode, StatusCode, SubStatusCode};
+use crate::isapi::{StatusCode, SubStatusCode};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Response {
     #[serde(rename = "requestURL")]
@@ -14,33 +14,33 @@ pub struct Response {
     pub sub_status_string: Option<String>,
     pub id: Option<u32>,
     pub sub_status_code: SubStatusCode,
-    pub error_code: Option<ErrorCode>,
+    pub error_code: Option<u64>,
     pub error_msg: Option<String>,
     pub additional_err: Option<AdditionalErr>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AdditionalErr {
     #[serde(rename = "AdditionalError")]
     pub additional_error: AdditionalError,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AdditionalError {
     #[serde(rename = "StatusList")]
     pub status_list: StatusList,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct StatusList {
     #[serde(rename = "Status")]
     pub status: Status,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Status {
     pub id: Option<u32>,
@@ -70,6 +70,10 @@ impl From<Response> for SimpleResponse {
 
 impl Display for SimpleResponse {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{} -> ({:?}:{}:{:?})", self.request_url, self.status_code, self.status_string, self.sub_status_code)
+        write!(
+            f,
+            "{} -> ({:?}:{}:{:?})",
+            self.request_url, self.status_code, self.status_string, self.sub_status_code
+        )
     }
 }
