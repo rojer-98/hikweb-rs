@@ -1,3 +1,4 @@
+use crate::isapi::Response;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -37,6 +38,17 @@ impl From<std::io::ErrorKind> for HikvisionError {
     fn from(error: std::io::ErrorKind) -> Self {
         HikvisionError::Std {
             source: error.into(),
+        }
+    }
+}
+
+impl From<Response> for HikvisionError {
+    fn from(r: Response) -> Self {
+        match r.error_code {
+            Some(ec) => HikvisionError::Response { source: ec.into() },
+            None => HikvisionError::Std {
+                source: std::io::Error::new(std::io::ErrorKind::InvalidData, "Response error"),
+            },
         }
     }
 }
