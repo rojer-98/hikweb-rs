@@ -1,6 +1,8 @@
+pub mod channels;
+
 pub mod attributes {
     use crate::{
-        isapi::{ChannelInfo, ChannelInfoList},
+        isapi::aux_info::channels::*,
         utils::{error::HikvisionError, request::RequestHandler},
     };
 
@@ -21,10 +23,7 @@ pub mod attributes {
 mod tests {
     #[tokio::test]
     async fn test_auxinfo_response() {
-        use crate::{
-            isapi::{ChannelInfo, ChannelInfoList, ICN},
-            utils::{error::HikvisionError, request::RequestHandler},
-        };
+        use crate::{isapi::aux_info::channels::*, utils::request::RequestHandler};
 
         let rh = RequestHandler::new("admin", "Admin777", "172.26.226.95", None);
         let channel_info = ChannelInfo {

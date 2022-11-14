@@ -10,10 +10,8 @@ pub mod streaming;
 pub mod system;
 pub mod thermal;
 
-pub mod channel;
 pub mod response;
 pub mod status;
 
-pub use channel::*;
 pub use response::*;
 pub(crate) use status::*;
