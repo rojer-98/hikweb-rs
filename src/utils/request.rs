@@ -15,10 +15,36 @@ use crate::utils::{
 pub struct RequestHandler {
     user: Option<String>,
     pass: Option<String>,
+    whole_url: Option<String>,
 }
 
 impl RequestHandler {
-    pub async fn send<S>(&self, url: &str, params: S) -> Result<(), HikvisionError>
+    pub fn new(user: &str, pass: &str, url: &str, port: Option<String>) -> Self {
+        let whole_url = if port.is_some() {
+            let port = port.unwrap().to_owned();
+            url.to_owned() + ":" + &port
+        } else {
+            url.to_owned()
+        };
+
+        Self {
+            user: Some(user.to_owned()),
+            pass: Some(pass.to_owned()),
+            whole_url: Some(whole_url),
+        }
+    }
+
+    pub(crate) fn prepare_url_to_request(&self, url: &str) -> String {
+        let whole_url = self.whole_url.clone().unwrap() + "/" + &url.to_owned();
+
+        if url.contains("http://") {
+            whole_url
+        } else {
+            "http://".to_owned() + &whole_url
+        }
+    }
+
+    pub(crate) async fn send<S>(&self, url: &str, params: S) -> Result<(), HikvisionError>
     where
         S: Serialize + Send + 'static + std::fmt::Debug,
     {
@@ -36,7 +62,7 @@ impl RequestHandler {
         Ok(())
     }
 
-    pub async fn recieve<D>(&self, url: &str) -> Result<D, HikvisionError>
+    pub(crate) async fn recieve<D>(&self, url: &str) -> Result<D, HikvisionError>
     where
         D: DeserializeOwned,
     {
@@ -66,7 +92,7 @@ impl RequestHandler {
             url,
             (self.user.clone(), self.pass.clone()),
             AuthType::Digest,
-            RequestType::Send,
+            RequestType::Recieve,
             None,
         )
         .await
@@ -85,7 +111,7 @@ async fn request(
 
     let client = Client::new();
     let request = match request_type {
-        Retrieve => client.get(url),
+        Recieve => client.get(url),
         Send => {
             if data.is_none() {
                 return Err(HikvisionError::NotSet);

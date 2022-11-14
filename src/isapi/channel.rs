@@ -19,19 +19,19 @@ pub type BurningPrevention = ICN;
 pub type PTZCtrl = ICN;
 pub type GlobalCamera = ICN;
 
-#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Default)]
 pub struct ICN {
     #[serde(rename = "InsertChanNo")]
     pub insert_chan_no: Option<u32>,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Default)]
 pub struct ChannelInfoList {
     #[serde(rename = "ChannelInfo")]
     pub channel_info_list: Vec<ChannelInfo>,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct ChannelInfo {
     pub id: u32,

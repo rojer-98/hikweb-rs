@@ -15,5 +15,5 @@ impl Default for AuthType {
 #[derive(Debug)]
 pub enum RequestType {
     Send,
-    Retrieve,
+    Recieve,
 }
