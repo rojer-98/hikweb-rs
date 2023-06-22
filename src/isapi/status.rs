@@ -137,6 +137,8 @@ pub enum ErrorCode {
     LowScore,
 
     //StatusCode = 4
+    //TODO
+
     #[error("Unknown error")]
     Unknown,
 }
@@ -190,6 +192,7 @@ impl From<u64> for ErrorCode {
             0x3000100D => StructException,
             0x30006000 => CaptureTimeout,
             0x30006001 => LowScore,
+            //TODO
 
             _ => Unknown,
         }
